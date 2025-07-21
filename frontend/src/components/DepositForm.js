@@ -2,53 +2,51 @@ import { useState } from "react";
 
 function DepositForm({ goals, onDeposit }) {
   const [amount, setAmount] = useState("");
-  const [selectedGoalId, setSelectedGoalId] = useState("");
+  const [selectedGoal, setSelectedGoal] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    const goal = goals.find((g) => String(g.id) === selectedGoalId);
-    if (!goal) return;
-    const updatedAmount = goal.savedAmount + parseFloat(amount);
+    const goal = goals.find((g) => g.id === parseInt(selectedGoal));
+    const updatedGoal = {
+      ...goal,
+      savedAmount: goal.savedAmount + Number(amount),
+    };
 
     fetch(`http://localhost:3000/goals/${goal.id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ savedAmount: updatedAmount })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ savedAmount: updatedGoal.savedAmount }),
     })
       .then((res) => res.json())
-      .then((updatedGoal) => {
-        onDeposit(updatedGoal);
-        setAmount("");
-        setSelectedGoalId("");
-      });
+      .then(onDeposit);
+
+    setAmount("");
+    setSelectedGoal("");
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <h2>Make a Deposit</h2>
-
+      <input
+        type="number"
+        placeholder="Amount"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        required
+      />
       <select
-        value={selectedGoalId}
-        onChange={(e) => setSelectedGoalId(e.target.value)}
+        value={selectedGoal}
+        onChange={(e) => setSelectedGoal(e.target.value)}
+        required
       >
-        <option value="">Select Goal</option>
+        <option value="">Select a goal</option>
         {goals.map((goal) => (
           <option key={goal.id} value={goal.id}>
             {goal.name}
           </option>
         ))}
       </select>
-
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-
       <button type="submit">Deposit</button>
     </form>
   );

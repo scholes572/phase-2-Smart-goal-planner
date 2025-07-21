@@ -1,19 +1,19 @@
-function GoalCard ({ goal, onDelete }) {
-    if (!goal) return null;
-    const { name, targetAmount, savedAmount, category, deadline } = goal
-    const progress = targetAmount > 0 ? Math.round((savedAmount / targetAmount) * 100) : 0;
-    return(
-        <div className="goalcard">
-              <h3>{name}</h3>
-              <p>Category: {category}</p>
-              <p>Target: {targetAmount}</p>
-              <p>Saved: {savedAmount}</p>
-              <p>Deadline: {deadline}</p>
-              <p>progress: {progress}%</p>
-             <progress value={savedAmount} max={targetAmount > 0 ? targetAmount : 1}></progress>
-             <br />
-            <button onClick={() => onDelete(goal.id)}>Delete</button>
-        </div>
-    )
+function GoalCard({ goal }) {
+  const { name, category, targetAmount, savedAmount, deadline } = goal;
+
+  const progressPercent = Math.min((savedAmount / targetAmount) * 100, 100).toFixed(0);
+
+  return (
+    <div className="goal-card">
+      <h3>{name}</h3>
+      <p>Category: {category}</p>
+      <p>Saved: ${savedAmount} / ${targetAmount}</p>
+      <p>Deadline: {deadline}</p>
+      <div className="progress-bar-container">
+        <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>
+      </div>
+    </div>
+  );
 }
+
 export default GoalCard;
