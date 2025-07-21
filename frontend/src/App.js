@@ -1,3 +1,7 @@
+import React from "react";
+import Header from "./components/Header"
+import GoalList from "./components/GoalList"
+import DepositForm from "./components/DepositForm"
 function App() {
   return (
     <div>
