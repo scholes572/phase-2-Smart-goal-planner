@@ -1,4 +1,5 @@
 function GoalCard ({ goal, onDelete }) {
+    if (!goal) return null;
     const { name, targetAmount, savedAmount, category, deadline } = goal
     const progress = targetAmount > 0 ? Math.round((savedAmount / targetAmount) * 100) : 0;
     return(
